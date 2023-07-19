@@ -57,7 +57,7 @@ Thermometer.prototype = {
   },
 
   _getStatus: function (callback) {
-    const url = this.apiroute + '/status'
+    const url = this.apiroute
     this.log.debug('Getting status: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
@@ -68,9 +68,8 @@ Thermometer.prototype = {
       } else {
         this.log.debug('Device response: %s', responseBody)
         try {
-          const json = JSON.parse(responseBody)
-          this.service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(json.currentTemperature)
-          this.log.debug('Updated CurrentTemperature to: %s', json.currentTemperature)
+          this.service.getCharacteristic(Characteristic.CurrentTemperature).updateValue(responseBody)
+          this.log.debug('Updated CurrentTemperature to: %s', responseBody)
           callback()
         } catch (e) {
           this.log.warn('Error parsing status: %s', e.message)
